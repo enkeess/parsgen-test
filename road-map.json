@@ -1,0 +1,39 @@
+{
+	"base": "https://raw.githubusercontent.com/enkeess/parsgen-test/master/build",
+	"data" : {
+		"folder": "",
+		"files": [
+			"Makefile",
+			"main.cpp"
+		],
+
+		"children": [
+			{	
+				"folder": "include",
+				"files": [
+					"LGraph.h",
+					"Mark.h",
+					"Parser.h",
+					"Scanner.h",
+					"Edge.h",
+					"Vertex.h",
+					"Dependencies.h"
+				],
+				"children": []
+			},
+
+			{
+				"folder": "src",
+				"files": [
+					"LGraph.cpp",
+					"Mark.cpp",
+					"Parser.cpp",
+					"Scanner.cpp",
+					"Vertex.cpp",
+					"Edge.cpp"
+				],
+				"children": []
+			}
+		]
+	}
+}
