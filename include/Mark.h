@@ -20,5 +20,6 @@ public:
 	Mark(MarkType type, std::string label);
 	MarkType getType();
 	std::string getLabel();
+	std::string print();
 };
 #endif

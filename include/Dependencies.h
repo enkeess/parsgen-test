@@ -4,6 +4,7 @@
 #include "../include/LGraph.h"
 #include "../include/Vertex.h"
 #include "../include/Edge.h"
+#include "../include/Direct.h"
 #include "../include/Mark.h"
 
 #include <vector>

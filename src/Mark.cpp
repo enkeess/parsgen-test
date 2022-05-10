@@ -22,3 +22,24 @@ MarkType Mark::getType() {
 std::string Mark::getLabel() {
 	return this->label;
 }
+
+std::string Mark::print() {
+	std::string str = "";
+
+	switch(type) {
+		case OPEN: 
+			str+= "(";
+			break;
+		case CLOSE:
+			str+= ")";
+			break;
+		default:
+			return "";
+	}
+
+	if(label != "") {
+		str+= "_" + label;
+	}
+
+	return str;
+}

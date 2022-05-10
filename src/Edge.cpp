@@ -2,23 +2,13 @@
 
 Edge::Edge(
 	int to, std::string label, 
-	std::vector<Mark> mark,
-	std::vector<std::string> trace
+	Mark mark,
+	std::vector<Direct> direct
 ) : 
 	to(to),
 	label(label),
 	mark(mark),
-	trace(trace){}
-
-Edge::Edge(
-	int to,
-	std::string label,
-	std::vector<Mark> mark
-) : 
-	to(to),
-	label(label),
-	mark(mark),
-	trace({}){}
+	direct(direct){}
 
 int Edge::getTo() {
 	return to;
@@ -28,10 +18,10 @@ std::string Edge::getLabel() {
 	return label;
 }
 
-std::vector<Mark> Edge::getMark() {
+Mark Edge::getMark() {
 	return mark;
 }
 
-std::vector<std::string> Edge::getTrace() {
-	return trace;
+std::vector<Direct> Edge::getDirect() {
+	return direct;
 }

@@ -1,8 +1,6 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-// using namespace std;
-
 #include "Scanner.h"
 #include <vector>
 #include <stack>
@@ -15,14 +13,13 @@ private:
 	Vertex curVertex;
 	LGraph curGraph;
 
-	std::stack<int> graphsStack; // вложенность графов
-	// std::stack<int> vertexStack; // стек переходов по пустой строке 
-	std::stack<Mark> bracketTrace;  // скобочный след
+	std::stack<int> graphsStack; 
+	std::stack<Mark> bracketTrace;  
 
 	std::vector<LGraph> graphs;
 	Scanner scanner;
 	std::set<std::string> getLexeme(Vertex v);
-	void updateBracketTrace(std::vector<Mark> mark);
+	void updateBracketTrace(Mark m);
 
 public: 
 	Parser(const char* filename, std::vector<LGraph> graphs);

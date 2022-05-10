@@ -4,7 +4,7 @@
 
 Parser::Parser(
 	const char* filename,
-	std::vector<LGraph> graphs // all graphs
+	std::vector<LGraph> graphs
 ): 
 	scanner(filename),
 	graphs(graphs) 
@@ -28,112 +28,221 @@ std::set<std::string> Parser::getLexeme(Vertex v) {
 }
 
 bool Parser::run() {
-	std::cout << "***** TRACE ROUTE *****\n";
+
+	std::cout << "\n***** TRACE ROUTE *****\n";
 	
 	std::set<std::string> lexeme = {};
 	std::vector<Edge> transition = {};
 
-	// std::string str = "";
-
 	for(lexeme = getLexeme(curVertex); lexeme.size() > 0; lexeme = getLexeme(curVertex)) {
-
-		std::string str = "";
-		// str = std::string(curVertex.getId());
-		// std::cout << curVertex.getId() << " -> ";
-		std::cout << curVertex.getName() << " -> ";
-		transition.clear();
-		for(auto& edge: curVertex.getEdges()) {
-			if(lexeme.count(edge.getLabel())) {
-				transition.push_back(edge);
-			}
+		
+		if(scanner.isEOF()) {
+			break;
 		}
 
-		Edge edge;
+		std::cout << curVertex.getName() << " -> ";
 
-		// будет как минимум одна альтернатина иначе мы не зайдем в цикл for вообще
-		if(transition.size() == 1) { // единственная альтернатива осуществляется переход
-			edge = transition[0];
-		} else { // есть несколько альтернатив надо смотреть скобочный след
-			Mark onTop = bracketTrace.top();
-			bool wasFind = false;
-			for(auto& e : transition) {
-				std::vector<Mark> mark = e.getMark();
-				Mark markFirst = mark[0];
+		std::string str = "";
+		transition.clear();
 
-				if(onTop.getType() == markFirst.getType()) { // переход найден
-					wasFind = true;
-					bracketTrace.push(onTop);
-					edge = e;
+		for(auto& edge: curVertex.getEdges()) {
+			for(auto& dir: edge.getDirect()) {
+				if(lexeme.count(dir.getLabel())) {
+					transition.push_back(edge);
 					break;
 				}
 			}
+		}
+		
+		Edge edge;
+
+		bool isNewEdge = false;
+
+		if(transition.size() == 1) { 
+			edge = transition[0];
+			isNewEdge = true;
+		} else { 
+			if(!bracketTrace.empty()) { 
+				Mark onTop = bracketTrace.top();
+
+				for(auto& e: transition) {
+					for(auto& dir: e.getDirect()) {
+						if(dir.getMark().getType()  == CLOSE && 
+						   dir.getMark().getLabel() == onTop.getLabel()) 
+						{
+							edge = e;
+
+							isNewEdge = true;
+							break;
+						}
+					}
+
+					if(isNewEdge) {
+						break;
+					}
+				}
+			}
+
+			if(!isNewEdge) {
+				for(auto& e: transition) {
+					for(auto& dir: e.getDirect()) {
+						if(dir.getMark().getType() != CLOSE && 
+						   dir.getLabel() != "") 
+						{
+							edge = e;
+							isNewEdge = true;
+							break;
+						}
+					}
+
+					if(isNewEdge) {
+						break;
+					}
+				}
+			}
+
+			if(!isNewEdge) {
+				for(auto& e: transition) {
+					for(auto& dir: e.getDirect()) {
+						if(dir.getMark().getType() != CLOSE && 
+						   dir.getLabel() == "") 
+						{
+							edge = e;
+							isNewEdge = true;
+							break;
+						}
+					}
+
+					if(isNewEdge) {
+						break;
+					}
+				}
+			}		
+		}
+
+		if(!isNewEdge) {
+			throw "NOT_FOUND_EDGE_FOR_TRANSFER";
 		}
 
 		scanner.updateFileShift(edge.getLabel());
 		for(auto& v: curGraph.getVertices()) {
 			if(v.getId() == edge.getTo()) {
 				curVertex = v;
-				for(auto& item: edge.getTrace()) {
-					std::cout << item << ", by: ''\n" << item << " -> ";
-				}
-				std::cout << curVertex.getName() << ", by: '" << edge.getLabel() << "'\n";
+				std::cout << curVertex.getName() << ", by: '" << edge.getLabel() << "'; "; 
+				std::cout << edge.getMark().print() << "\n";
 				updateBracketTrace(edge.getMark());
 				break;
 			}
 		}
-
-		// std::cout << "NEW VERTEX: " << curVertex.getId() << "\n";
-	} 
-
-	std::cout << "***** TRACE ROUTE *****\n";
-
-	// 0. не найдено ни одного токена для перехода
-
-
-	// 1. Финальное состояние
-	if(!curGraph.getFinish().count(curVertex.getId())) {
-		throw "STATE_ERROR_non_finish_state";
 	}
 
-	// 2. Скобочный след пустой
-	if(!bracketTrace.empty()) {
-		throw "Bracket_Trace_Error_non_empty_stack";
-	}
+	while(!bracketTrace.empty() || !curGraph.getFinish().count(curVertex.getId())) {
+		std::vector<Edge> transition = {};
 
-	// 3. Вложенность графов надо проверить
-	// if(!graphsStack.empty()) {
+		std::cout << curVertex.getName() << " -> ";
 
-	// }
+		transition.clear();
 
-	// 4. Файл закончился
-	if(!scanner.isEOF()) { // файл не закончился
-		throw "STATE_ERROR_empty_set_possible_str";
+		for(auto& edge: curVertex.getEdges()) {
+			if(edge.getLabel() == "") {
+				transition.push_back(edge);
+			}
+		}
+		
+		Edge edge;
+
+		bool isNewEdge = false;
+
+		if(transition.size() == 0) {
+			break;
+		} 
+
+		if(transition.size() == 1) {
+			edge = transition[0];
+			isNewEdge = true;
+		} else {
+			if(!bracketTrace.empty()) { 
+				Mark onTop = bracketTrace.top();
+
+				for(auto& e: transition) {
+					if( e.getMark().getType()  == CLOSE && 
+						e.getMark().getLabel() == onTop.getLabel()) 
+					{
+						edge = e;
+						isNewEdge = true;
+						break;
+					}
+		
+					if(isNewEdge) {
+						break;
+					}
+				}
+			}
+
+			if(!isNewEdge) {
+				for(auto& e: transition) {
+					if(e.getMark().getType() != CLOSE) {
+						edge = e;
+						isNewEdge = true;
+						break;
+					}
+				}
+
+				if(isNewEdge) {
+					break;
+				}
+			}
+		}
+
+		for(auto& v: curGraph.getVertices()) {
+			if(v.getId() == edge.getTo()) {
+				curVertex = v;
+				std::cout << curVertex.getName() << ", by: '" << edge.getLabel() << "'; "; 
+				
+				std::cout << edge.getMark().print() << "\n";
+				updateBracketTrace(edge.getMark());
+				break;
+			}
+		}
 	}
 	
+
+	std::cout << "\n***** TRACE ROUTE *****\n";
+
+	if(!curGraph.getFinish().count(curVertex.getId())) {
+		throw "STATE_ERROR_NON_FINISH_STATE";
+	}
+
+	if(!scanner.isEOF()) { 
+		throw "STATE_ERROR_EMPTY_SET_POSSIBLE_STR";
+	}
+
+	if(!bracketTrace.empty()) {
+		throw "BRACKET_TRACE_ERROR_NON_EMPTY_STACK";
+	}
+
 	return true;
 };
 
-void Parser::updateBracketTrace(std::vector<Mark> mark) {
-	for(auto& m: mark) {
-		switch (m.getType()) {
-			case(OPEN): 
-				bracketTrace.push(m);
-				break;
-			case(CLOSE):
-				if(!bracketTrace.empty()) { // стек не пуст 
-					// 1. Взять элемент с вершины стека и посмотреть на него
-					Mark onTop = bracketTrace.top();
-					if(onTop.getLabel() == m.getLabel()) {
-						bracketTrace.pop();
-					} else throw "Bracket_Trace_Error_non_pair_label";
+void Parser::updateBracketTrace(Mark m) {
+	switch (m.getType()) {
+		case(OPEN): 
+			bracketTrace.push(m);
+			break;
+		case(CLOSE):
+			if(!bracketTrace.empty()) { 
+				Mark onTop = bracketTrace.top();
+				if(onTop.getLabel() == m.getLabel()) {
+					bracketTrace.pop();
+				} else {
+					std::cout << onTop.getLabel() << " vs " << m.getLabel() << '\n';
+					throw "BRACKET_TRACE_ERROR_NON_PAIR_LABEL";
+				}
 
-				} else throw "Bracket_Trace_Error_push_close_to_empty_stack";
+			} else throw "BRACKET_TRACE_ERROR_PUSH_(_TO_EMPTY_STACK";
 
-				break;
-			default: 
-				break;
-		}
+			break;
+		default: 
+			break;
 	}
 }
-
-

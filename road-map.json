@@ -17,6 +17,7 @@
 					"Scanner.h",
 					"Edge.h",
 					"Vertex.h",
+					"Direct.h",
 					"Dependencies.h"
 				],
 				"children": []
@@ -30,6 +31,7 @@
 					"Parser.cpp",
 					"Scanner.cpp",
 					"Vertex.cpp",
+					"Direct.cpp",
 					"Edge.cpp"
 				],
 				"children": []

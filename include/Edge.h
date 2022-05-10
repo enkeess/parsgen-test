@@ -1,39 +1,31 @@
 #ifndef EDGE_H
 #define EDGE_H
 
-
 #include "Mark.h"
+#include "Direct.h"
 #include <string>
 #include <vector>
-
 
 class Edge {
 private:
 	int to;
 	std::string label;
-	std::vector<Mark> mark;
-	std::vector<std::string> trace;
+	Mark mark;
+	std::vector<Direct> direct;
 
 public: 
 	Edge(
 		int to, std::string label, 
-		std::vector<Mark> mark,
-		std::vector<std::string> trace
-	);
-
-	Edge(
-		int to,
-		std::string label,
-		std::vector<Mark> mark
+		Mark mark,
+		std::vector<Direct> direct
 	);
 
 	Edge(){};
 
-
 	int getTo();
 	std::string getLabel();
-	std::vector<Mark> getMark();
-	std::vector<std::string> getTrace();
+	Mark getMark();
+	std::vector<Direct> getDirect();
 };
 
 #endif

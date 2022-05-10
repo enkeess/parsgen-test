@@ -21,7 +21,7 @@ private:
 	const char* filename;
 
 	int getWordMaxSize(const std::set<std::string>& possibleStr);
-	int readIntoBuf(); // возвращает кол-во прочитанных символов
+	int readIntoBuf(); 
 	std::string getStrFromBuf(int maxsize);
 
 	void closeFile();

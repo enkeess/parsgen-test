@@ -31,7 +31,6 @@ public:
 	int getId() {
 		return id;
 	}
-	
 };
 
 #endif

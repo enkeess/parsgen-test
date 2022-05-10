@@ -1,7 +1,6 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
-// #include "STATE_NAME.h"
 #include "Edge.h"
 
 #include <string>
@@ -16,7 +15,6 @@ private:
 
 public: 
 	Vertex(std::string name, int id, std::vector<Edge> edges);
-	Vertex(std::string name, int id, Edge edge);
 	Vertex(std::string name, int id);
 	Vertex(){}
 	
