@@ -6,7 +6,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) { 
 	try {
-		Parser p("test.txt", _graphs);
+		Parser p("input.txt", _graphs);
 		p.run();
 	}
 	catch(const char* str) {

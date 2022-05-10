@@ -1,6 +1,6 @@
 RESULT = lib/
 BIN = bin/
-TARGET = t
+TARGET = parser
 SRC = src/
 TEST = test/
 

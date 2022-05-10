@@ -4,7 +4,8 @@
 		"folder": "",
 		"files": [
 			"Makefile",
-			"main.cpp"
+			"main.cpp",
+			"input.txt"
 		],
 
 		"children": [

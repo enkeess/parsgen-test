@@ -29,7 +29,7 @@ std::set<std::string> Parser::getLexeme(Vertex v) {
 
 bool Parser::run() {
 
-	std::cout << "\n***** TRACE ROUTE *****\n";
+	std::cout << "\n***** TRACE ROUTE *****\n\n";
 	
 	std::set<std::string> lexeme = {};
 	std::vector<Edge> transition = {};
