@@ -239,7 +239,7 @@ void Parser::updateBracketTrace(Mark m) {
 					throw "BRACKET_TRACE_ERROR_NON_PAIR_LABEL";
 				}
 
-			} else throw "BRACKET_TRACE_ERROR_PUSH_(_TO_EMPTY_STACK";
+			} else throw "BRACKET_TRACE_ERROR_PUSH_)_TO_EMPTY_STACK";
 
 			break;
 		default: 

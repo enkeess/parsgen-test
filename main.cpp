@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
 		p.run();
 	}
 	catch(const char* str) {
-		cout << str << "\n";
+		cout << "\n*---------ERROR----------*\n" << str << "\n";
 	}
 	catch (...) {
 		cout << "Something wrong\n";

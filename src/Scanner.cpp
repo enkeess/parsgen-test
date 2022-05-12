@@ -5,12 +5,15 @@ Scanner::Scanner(const char* filename) {
 	this->filename = filename;
 
 	std::cout<< "filename: " << filename << '\n';
-	eof = false;
+
 	openFile();
 	fileShift = 0;
 
 	inputStreamFile.seekg(0, inputStreamFile.end);
 	fileSize = inputStreamFile.tellg();
+
+	eof = fileSize == 0;
+	
 	inputStreamFile.seekg(0, inputStreamFile.beg);
 }
 
